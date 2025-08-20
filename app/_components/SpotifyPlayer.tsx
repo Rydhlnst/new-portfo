@@ -23,36 +23,26 @@ type Track = {
   album: string;
   coverUrl: string;
   url?: string;
-  duration: number;
+  file: string;
+  duration?: number;
 };
 
 const demoQueue: Track[] = [
   {
-    title: "Moonlight Drive",
-    artist: "The Doors",
-    album: "Strange Days",
-    coverUrl:
-      "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=900&auto=format&fit=crop",
+    title: "Crying Lightning",
+    artist: "Arctic Monkeys",
+    album: "Humbug",
+    coverUrl: "/CoverHumbug.png",
+    file: "/CryingLightning.mp3",
     url: "https://open.spotify.com/",
-    duration: 218,
   },
   {
-    title: "Midnight City",
-    artist: "M83",
-    album: "Hurry Up, We're Dreaming",
-    coverUrl:
-      "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=900&auto=format&fit=crop",
+    title: "After Hours",
+    artist: "The Weeknd",
+    album: "After Hours",
+    coverUrl: "/CoverAH.jpg",
+    file: "/AfterHours.mp3",
     url: "https://open.spotify.com/",
-    duration: 253,
-  },
-  {
-    title: "Lose Yourself to Dance",
-    artist: "Daft Punk",
-    album: "Random Access Memories",
-    coverUrl:
-      "https://images.unsplash.com/photo-1483412033650-1015ddeb83d1?q=80&w=900&auto=format&fit=crop",
-    url: "https://open.spotify.com/",
-    duration: 329,
   },
 ];
 
@@ -67,38 +57,73 @@ export default function SpotifyCard() {
   const [index, setIndex] = React.useState(0);
   const [isPlaying, setIsPlaying] = React.useState(false);
   const [time, setTime] = React.useState(0);
+  const [duration, setDuration] = React.useState(0);
 
+  const audioRef = React.useRef<HTMLAudioElement | null>(null);
   const current = queue[index];
 
+  // Load lagu baru setiap index berubah
   React.useEffect(() => {
-    if (!isPlaying) return;
-    const id = setInterval(() => {
-      setTime((t) => {
-        if (t + 0.5 >= current.duration) {
-          handleNext();
-          return 0;
-        }
-        return t + 0.5;
-      });
-    }, 500);
-    return () => clearInterval(id);
-  }, [isPlaying, index,]);
+    if (audioRef.current) {
+      audioRef.current.src = current.file;
+      audioRef.current.load();
+      setTime(0);
+      if (isPlaying) {
+        audioRef.current.play();
+      }
+    }
+  }, [index]);
 
-  const handlePlayPause = () => setIsPlaying((p) => !p);
+  // Update waktu setiap "timeupdate"
+  React.useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const updateTime = () => setTime(audio.currentTime);
+    const setMeta = () => setDuration(audio.duration);
+
+    audio.addEventListener("timeupdate", updateTime);
+    audio.addEventListener("loadedmetadata", setMeta);
+    audio.addEventListener("ended", handleNext);
+
+    return () => {
+      audio.removeEventListener("timeupdate", updateTime);
+      audio.removeEventListener("loadedmetadata", setMeta);
+      audio.removeEventListener("ended", handleNext);
+    };
+  }, []);
+
+  const handlePlayPause = () => {
+    if (!audioRef.current) return;
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+
   const handlePrev = () => {
-    setTime(0);
     setIndex((i) => (i - 1 + queue.length) % queue.length);
   };
+
   const handleNext = () => {
-    setTime(0);
     setIndex((i) => (i + 1) % queue.length);
   };
 
-  const progress = Math.min(100, (time / current.duration) * 100);
+  const handleSeek = (value: number) => {
+    if (!audioRef.current) return;
+    audioRef.current.currentTime = value;
+    setTime(value);
+  };
+
 
   return (
     <Card className="col-span-4 overflow-hidden border-0 bg-foreground/90 shadow-lg rounded-xl">
       <CardContent className="p-4">
+        {/* Audio player hidden */}
+        <audio ref={audioRef} preload="metadata" />
+
         <div className="grid grid-cols-1 sm:grid-cols-[92px_1fr] gap-4">
           {/* Cover */}
           <div className="relative aspect-square overflow-hidden rounded-xl">
@@ -143,17 +168,15 @@ export default function SpotifyCard() {
             {/* Progress */}
             <div className="my-2">
               <Slider
-                value={[progress]}
-                onValueChange={([v]) =>
-                  setTime(((v ?? 0) / 100) * current.duration)
-                }
+                value={[time]}
+                max={duration || 0}
+                step={0.1}
+                onValueChange={([v]) => handleSeek(v ?? 0)}
                 className="h-2 bg-white/20"
-              >
-                <div className="bg-[#1DB954]" />
-              </Slider>
+              />
               <div className="mt-1 flex justify-between text-[11px] text-white/50">
                 <span>{formatTime(time)}</span>
-                <span>{formatTime(current.duration)}</span>
+                <span>{formatTime(duration)}</span>
               </div>
             </div>
 
@@ -175,7 +198,11 @@ export default function SpotifyCard() {
                   onClick={handlePlayPause}
                   aria-label={isPlaying ? "Pause" : "Play"}
                 >
-                  {isPlaying ? <Pause className="size-5" /> : <Play className="size-5" />}
+                  {isPlaying ? (
+                    <Pause className="size-5" />
+                  ) : (
+                    <Play className="size-5" />
+                  )}
                 </Button>
                 <Button
                   size="icon"
@@ -195,8 +222,17 @@ export default function SpotifyCard() {
                 <Button size="icon" variant="ghost" className="hover:bg-white/10">
                   <Repeat className="size-5 text-white" />
                 </Button>
-                <Button size="icon" variant="ghost" className="hover:bg-white/10" asChild>
-                  <a href={current.url ?? "https://open.spotify.com/"} target="_blank" rel="noopener noreferrer">
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="hover:bg-white/10"
+                  asChild
+                >
+                  <a
+                    href={current.url ?? "https://open.spotify.com/"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <ExternalLink className="size-5 text-white" />
                   </a>
                 </Button>
