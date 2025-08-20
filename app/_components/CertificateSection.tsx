@@ -27,6 +27,20 @@ const certificates = [
     url: "/certificate/LogicProgramming.jpg",
     tech: ["Javascript"]
   },
+  {
+    name: "Probability",
+    provider: "Pacmann",
+    issued: "June 2025",
+    url: "/certificate/Probability.jpg",
+    tech: ["Python", "Numpy"]
+  },
+  {
+    name: "Data Visualiation & Wrangling",
+    provider: "Pacmann",
+    issued: "June 2025",
+    url: "/certificate/DataWrangling.jpg",
+    tech: ["Python", "Numpy"]
+  },
 ];
 
 

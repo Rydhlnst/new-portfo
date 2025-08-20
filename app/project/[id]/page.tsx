@@ -7,6 +7,10 @@ type Params = Promise<{id: string}>
 const ProjectDetailsPage = async ({params}: {params: Params}) => {
    const {id} = await params;
    const project = projectsData[id]
+
+   if (!project) {
+    return <div className="p-10">Project not found</div>;
+  }
   return (
     <div className='w-full min-h-screen h-full'>
         <div>

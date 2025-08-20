@@ -14,6 +14,8 @@ import { SiNextdotjs, SiTailwindcss, SiTypescript, SiPrisma, SiFramer, SiMongodb
 import gsap from "gsap";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 const techIcons = [
   { icon: <SiNextdotjs color="#000000" />, name: "Next.js" },
@@ -23,6 +25,7 @@ const techIcons = [
   { icon: <SiTypescript color="#3178c6" />, name: "TypeScript" },
   { icon: <FaNodeJs color="#339933" />, name: "Node.js" },
   { icon: <SiPrisma color="#0c344b" />, name: "Prisma" },
+  { icon: <SiMongodb color="#47A248" />, name: "MongoDB" },
   { icon: <SiMongodb color="#47A248" />, name: "MongoDB" },
   { icon: <SiMongoose color="#47A248" />, name: "Mongoose" },
   { icon: <SiFigma color="#F24E1E" />, name: "Figma" },
@@ -34,22 +37,25 @@ const techIcons = [
 
 const SmallAboutMe = () => {
    const sectionRef = useRef<HTMLDivElement>(null);
+   const pathname = usePathname()
 
     useEffect(() => {
     if (!sectionRef.current) return;
 
     const cols = Array.from(sectionRef.current.querySelector(".grid")?.children || []);
 
-    gsap.from(cols, {
-      opacity: 0,
-      y: 50,
+    gsap.set(cols, { opacity: 0, y: 50 });
+
+    gsap.to(cols, {
+      opacity: 1,
+      y: 0,
       duration: 0.8,
       stagger: 0.3,
       ease: "power3.out",
     });
-  }, []);
+  }, [pathname]);
   return (
-    <section ref={sectionRef} className="px-4 md:px-8 lg:px-16 border-primary/10 relative">
+    <section ref={sectionRef} className="px-4 md:px-8 lg:px-16 border-primary/10 relative" suppressHydrationWarning>
       <div className="size-64 absolute -z-10 rounded-full rounded-tr-none bg-sky-400 top-0 right-0"/>
       <div className="size-64 absolute -z-10 rounded-full rounded-bl-none bg-red-400 bottom-0 left-0"/>
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-t pt-8 gap-6 items-start">
@@ -190,12 +196,28 @@ const SmallAboutMe = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex flex-col space-y-3">
-                <div className="aspect-video bg-gray-200 rounded-lg relative" >
-                  <Link href={"/"} className={buttonVariants({className: "absolute bottom-5 right-5 !rounded-full flex items-center justify-center", size: "icon", variant: "outline"})}>
-                    <ArrowRight weight="duotone" className="-rotate-45"/>
+                <div className="relative rounded-lg overflow-hidden">
+                  <Image
+                    src="/projects/recents/recent.png"
+                    alt=""
+                    width={800}  
+                    height={600}  
+                    className="object-contain rounded-lg"
+                  />
+                  <Link
+                    href="/"
+                    className={buttonVariants({
+                      className:
+                        "absolute bottom-5 right-5 !rounded-full flex items-center justify-center",
+                      size: "icon",
+                      variant: "outline",
+                    })}
+                  >
+                    <ArrowRight weight="duotone" className="-rotate-45" />
                   </Link>
                 </div>
               </CardContent>
+
             </Card>
           </div>
         </CardSuspenseTeam>
