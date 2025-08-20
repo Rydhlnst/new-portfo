@@ -26,7 +26,7 @@ export const projectsData: Record<string, ProjectData & {
       "Auth.js", "React", "ShadCN UI", "Pino", "Zod", "MDX"
     ],
     images: [
-      "/projects/devflow/1.jpg",
+      "/projects/devflow/1.png",
       "/projects/devflow/2.png",
       "/projects/devflow/3.png",
       "/projects/devflow/4.png",

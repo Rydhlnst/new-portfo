@@ -21,9 +21,9 @@ const ProjectDetails = ({ project }: ProjectDetailsProps) => {
         <div className="mt-8 flex flex-col items-start space-y-6 w-full px-4 md:px-8 lg:px-16">
         <div className="grid grid-cols-1 md:flex-row gap-10 w-full pb-10">
             <div className="flex-1 space-y-6">
-            <div className="relative aspect-video rounded-xl overflow-hidden border">
-                <Link className={buttonVariants({className: "absolute !rounded-full top-4 z-10 left-10 bottom-10 cursor-pointer hover:size-14 hover:bottom-15 hover:-rotate-15 transition-all duration-200 group bg-black size-12 right-10 flex items-center justify-center", size:"icon"})} href={"/"}>
-                    <ChevronLeft className='size-5 text-white group-hover:size-8 duration-200'/>
+            <div className="relative w-full flex justify-center rounded-xl overflow-hidden border bg-black">
+                <Link className={buttonVariants({className: "absolute border bg-white hover:bg-white !rounded-full top-4 z-10 left-10 bottom-10 cursor-pointer hover:size-14 hover:bottom-15 hover:-rotate-15 transition-all duration-200 group  size-12 right-10 flex items-center justify-center", size:"icon"})} href={"/"}>
+                    <ChevronLeft className='size-5 text-black group-hover:size-8 duration-200'/>
                 </Link>
                 <Image
                 src={
@@ -32,8 +32,9 @@ const ProjectDetails = ({ project }: ProjectDetailsProps) => {
                     : project.images ?? "/placeholder.jpg"
                 }
                 alt={project.title ?? "Project preview"}
-                fill
-                className="object-cover"
+                width={1920}
+                height={0}
+                className="w-auto h-auto max-w-full object-contain"
                 priority
                 />
             </div>
@@ -59,63 +60,66 @@ const ProjectDetails = ({ project }: ProjectDetailsProps) => {
             )}
             </div>
 
-            <div className="grid grid-cols-3 gap-x-10">
-            <div className="flex flex-col gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-x-10">
                 <div className="flex flex-col gap-3">
-                <h1 className="text-lg font-semibold">{project.title}</h1>
-                <p className="text-sm text-muted-foreground">{project.purpose}</p>
+                    <div className="flex flex-col gap-3">
+                    <h1 className="text-lg font-semibold">{project.title}</h1>
+                    <p className="text-sm text-muted-foreground">{project.purpose}</p>
+                    </div>
+                    <div className="flex flex-wrap gap-3">
+                    {project.tech.map((tech) => {
+                        const Icon = techIconMap[tech];
+                        return (
+                        <Badge
+                            key={tech}
+                            variant="outline"
+                            className="flex items-center gap-1 px-3 py-1"
+                        >
+                            {Icon && <Icon className="w-4 h-4 mr-1" />}
+                            {tech}
+                        </Badge>
+                        );
+                    })}
+                    </div>
                 </div>
-                <div className="flex flex-wrap gap-3">
-                {project.tech.map((tech) => {
-                    const Icon = techIconMap[tech];
-                    return (
-                    <Badge
-                        key={tech}
-                        variant="outline"
-                        className="flex items-center gap-1 px-3 py-1"
-                    >
-                        {Icon && <Icon className="w-4 h-4 mr-1" />}
-                        {tech}
-                    </Badge>
-                    );
-                })}
+
+                <div className="grid grid-cols-1 md:grid-cols-3 col-span-2 gap-6 md:gap-y-10">
+                    <div className="col-span-1 md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
+                    <p className="text-sm font-medium">{project.description}</p>
+                    <p className="text-justify text-sm font-medium">{project.features}</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 col-span-1 md:col-span-3 gap-6">
+                    <div className="flex flex-col">
+                        <h2 className="font-semibold text-primary/60 text-lg">Title</h2>
+                        <p className="text-sm font-medium">{project.title}</p>
+                    </div>
+                    <div className="flex flex-col">
+                        <h2 className="font-semibold text-primary/60 text-lg">Role</h2>
+                        <p className="text-sm font-medium">{project.role}</p>
+                    </div>
+                    <div className="flex flex-col">
+                        <h2 className="font-semibold text-primary/60 text-lg">Timeline</h2>
+                        <p className="text-sm font-medium">{project.timeline}</p>
+                    </div>
+                    {project.repo ? (
+                        <Link
+                        href={project.repo}
+                        className={buttonVariants({ variant: "outline" })}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >
+                        Visit Repo
+                        </Link>
+                    ) : (
+                        <p className="text-sm text-muted-foreground italic">
+                        Currently not public
+                        </p>
+                    )}
+                    </div>
                 </div>
-            </div>
-            <div className="grid grid-cols-3 col-span-2 gap-y-10">
-                <div className="col-span-3 grid grid-cols-2 gap-10">
-                <p className="text-sm font-medium">{project.description}</p>
-                <p className="text-justify text-sm font-medium">{project.features}</p>
                 </div>
-                <div className="grid grid-cols-4 col-span-3 gap-y-10">
-                <div className="flex flex-col">
-                    <h2 className="font-semibold text-primary/60 text-lg">Title</h2>
-                    <p className="text-sm font-medium">{project.title}</p>
-                </div>
-                <div className="flex flex-col">
-                    <h2 className="font-semibold text-primary/60 text-lg">Role</h2>
-                    <p className="text-sm font-medium">{project.role}</p>
-                </div>
-                <div className="flex flex-col">
-                    <h2 className="font-semibold text-primary/60 text-lg">Timeline</h2>
-                    <p className="text-sm font-medium">{project.timeline}</p>
-                </div>
-                {project.repo ? (
-                    <Link
-                    href={project.repo}
-                    className={buttonVariants({ variant: "outline" })}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    >
-                    Visit Repo
-                    </Link>
-                ) : (
-                    <p className="text-sm text-muted-foreground italic">
-                    Currently not public
-                    </p>
-                )}
-                </div>
-            </div>
-            </div>
+
         </div>
         </div>
     </ProjectDetailsSuspense>
