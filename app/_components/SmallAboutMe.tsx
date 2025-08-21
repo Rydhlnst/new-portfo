@@ -235,10 +235,10 @@ const SmallAboutMe = () => {
                 <Card className="border-none shadow-none">
                   <CardContent className="grid grid-cols-4 gap-3">
                       {[
-                        { name: "GitHub", color: "#333333", url: "https://github.com/riyadhulnst", desc: "Check out my open-source projects", followers: "2.1k followers", icon: <FaGithub className="size-12" color="#333333" />, iconSmall: <FaGithub className="size-6" color="#333333" />, bg: "bg-gray-100" },
-                        { name: "LinkedIn", color: "#0A66C2", url: "https://linkedin.com/in/yourusername", desc: "Connect with me professionally", followers: "500+ connections", icon: <FaLinkedin className="size-12" color="#0A66C2" />, iconSmall: <FaLinkedin className="size-6" color="#0A66C2" />, bg: "bg-blue-50" },
-                        { name: "Instagram", color: "#E1306C", url: "https://instagram.com/yourusername", desc: "Follow my creative journey", followers: "1.4k followers", icon: <FaInstagram className="size-12" color="#E1306C" />, iconSmall: <FaInstagram className="size-6" color="#E1306C" />, bg: "bg-pink-50" },
-                        { name: "Twitter", color: "#1DA1F2", url: "https://twitter.com/yourusername", desc: "Sharing thoughts & updates", followers: "800 followers", icon: <FaTwitter className="size-12" color="#1DA1F2" />, iconSmall: <FaTwitter className="size-6" color="#1DA1F2" />, bg: "bg-sky-50" },
+                        { name: "GitHub", color: "#333333", url: "https://github.com/riyadhulnst", desc: "Check out my open-source projects", followers: "1+ followers", icon: <FaGithub className="size-12" color="#333333" />, iconSmall: <FaGithub className="size-6" color="#333333" />, bg: "bg-gray-100" },
+                        { name: "LinkedIn", color: "#0A66C2", url: "https://linkedin.com/in/404ryan", desc: "Connect with me professionally", followers: "500+ connections", icon: <FaLinkedin className="size-12" color="#0A66C2" />, iconSmall: <FaLinkedin className="size-6" color="#0A66C2" />, bg: "bg-blue-50" },
+                        { name: "Instagram", color: "#E1306C", url: "https://instagram.com/riyadhulnst", desc: "Follow my creative journey", followers: "500+ followers", icon: <FaInstagram className="size-12" color="#E1306C" />, iconSmall: <FaInstagram className="size-6" color="#E1306C" />, bg: "bg-pink-50" },
+                        { name: "Twitter", color: "#1DA1F2", url: "https://x.com/riyadhulnst", desc: "Sharing thoughts & updates", followers: "30+ followers", icon: <FaTwitter className="size-12" color="#1DA1F2" />, iconSmall: <FaTwitter className="size-6" color="#1DA1F2" />, bg: "bg-sky-50" },
                       ].map((item, i) => (
                         <HoverCard key={i}>
                           <HoverCardTrigger asChild>
